@@ -5,17 +5,12 @@ const prisma = new PrismaClient();
 
 type Params = { id: string };
 
-export async function POST(
+export async function GET(
   _request: NextRequest,
-  context: { params: Params } | { params: Promise<Params> }
+  context: { params: Promise<Params> }
 ) {
   try {
-    const params =
-      context.params instanceof Promise
-        ? await context.params
-        : context.params;
-
-    const { id } = params;
+    const { id } = await context.params;
 
     const round = await prisma.round.findUnique({
       where: { id },
@@ -28,23 +23,11 @@ export async function POST(
       );
     }
 
-    const updated = await prisma.round.update({
-      where: { id },
-      data: {
-        status: 'REVEALED',
-        revealedAt: new Date(),
-      },
-    });
-
-    return NextResponse.json({
-      roundId: updated.id,
-      serverSeed: updated.serverSeed,
-      status: updated.status,
-    });
+    return NextResponse.json(round);
   } catch (error) {
-    console.error('Error revealing round:', error);
+    console.error('Error fetching round:', error);
     return NextResponse.json(
-      { error: 'Failed to reveal round' },
+      { error: 'Failed to fetch round' },
       { status: 500 }
     );
   }
