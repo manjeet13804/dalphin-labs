@@ -11,7 +11,7 @@ export async function GET(
 ) {
   try {
     const { id } = await context.params;
-
+    
     const round = await prisma.round.findUnique({
       where: { id },
     });
