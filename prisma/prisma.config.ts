@@ -4,4 +4,4 @@ export default {
       url: process.env.DATABASE_URL || 'file:./prisma/dev.db',
     },
   },
-};
+} as any;
