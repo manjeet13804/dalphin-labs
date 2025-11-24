@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient({
-  datasources: {
-    db: {
-      url: process.env.DATABASE_URL || 'file:./dev.db',
-    },
-  },
-});
+const prisma = new PrismaClient();
 
 export async function POST(
   _request: NextRequest,
