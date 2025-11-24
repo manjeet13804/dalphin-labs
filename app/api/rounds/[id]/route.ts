@@ -5,11 +5,12 @@ const prisma = new PrismaClient();
 
 export async function GET(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const round = await prisma.round.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!round) {

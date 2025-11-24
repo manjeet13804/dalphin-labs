@@ -7,9 +7,10 @@ const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { clientSeed, betCents, dropColumn } = await request.json();
 
     // Validate inputs
@@ -29,7 +30,7 @@ export async function POST(
 
     // Get round
     const round = await prisma.round.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!round) {
@@ -57,7 +58,7 @@ export async function POST(
 
     // Update round
     const updated = await prisma.round.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: 'STARTED',
         clientSeed,
