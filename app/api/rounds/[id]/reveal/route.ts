@@ -5,11 +5,12 @@ const prisma = new PrismaClient();
 
 export async function POST(
   _request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const round = await prisma.round.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!round) {
@@ -20,7 +21,7 @@ export async function POST(
     }
 
     const updated = await prisma.round.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         status: 'REVEALED',
         revealedAt: new Date(),
