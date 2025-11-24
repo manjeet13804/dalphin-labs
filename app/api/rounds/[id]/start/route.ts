@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { combineSeed } from '@/lib/crypto';
 import { runGame, getPayoutMultiplier } from '@/lib/engine';
-
-const prisma = new PrismaClient();
 
 export async function POST(
   request: NextRequest,

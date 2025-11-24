@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { randomBytes } from 'crypto';
-import { PrismaClient } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
 import { createCommit } from '@/lib/crypto';
-
-const prisma = new PrismaClient();
 
 export async function POST(_request: NextRequest) {
   try {
