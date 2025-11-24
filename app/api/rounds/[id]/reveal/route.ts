@@ -3,17 +3,13 @@ import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-type Params = { id: string };
-
-export async function GET(
+export async function POST(
   _request: NextRequest,
-  context: { params: Promise<Params> }
+  { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = await context.params;
-    
     const round = await prisma.round.findUnique({
-      where: { id },
+      where: { id: params.id },
     });
 
     if (!round) {
@@ -23,11 +19,23 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(round);
+    const updated = await prisma.round.update({
+      where: { id: params.id },
+      data: {
+        status: 'REVEALED',
+        revealedAt: new Date(),
+      },
+    });
+
+    return NextResponse.json({
+      roundId: updated.id,
+      serverSeed: updated.serverSeed,
+      status: updated.status,
+    });
   } catch (error) {
-    console.error('Error fetching round:', error);
+    console.error('Error revealing round:', error);
     return NextResponse.json(
-      { error: 'Failed to fetch round' },
+      { error: 'Failed to reveal round' },
       { status: 500 }
     );
   }
