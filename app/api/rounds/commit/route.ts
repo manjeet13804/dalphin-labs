@@ -3,7 +3,13 @@ import { randomBytes } from 'crypto';
 import { PrismaClient } from '@prisma/client';
 import { createCommit } from '@/lib/crypto';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL || 'file:./dev.db',
+    },
+  },
+});
 
 export async function POST(_request: NextRequest) {
   try {

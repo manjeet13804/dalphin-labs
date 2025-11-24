@@ -3,7 +3,13 @@ import { PrismaClient } from '@prisma/client';
 import { combineSeed } from '@/lib/crypto';
 import { runGame, getPayoutMultiplier } from '@/lib/engine';
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DATABASE_URL || 'file:./dev.db',
+    },
+  },
+});
 
 export async function POST(
   request: NextRequest,
